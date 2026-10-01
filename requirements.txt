@@ -1,0 +1,14 @@
+# Core data stack
+numpy
+pandas
+scikit-learn
+
+# Visualization
+matplotlib
+
+# Notebooks
+jupyter
+ipykernel
+
+# Model persistence
+joblib
