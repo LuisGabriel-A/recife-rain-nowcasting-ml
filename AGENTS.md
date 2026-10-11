@@ -12,6 +12,45 @@ The main supervised-learning task is binary classification of severe rainfall fo
 
 The repository also includes an unsupervised-learning stage for identifying meteorological regimes through clustering.
 
+## Approved Temporal Boundary Correction — 2026-10-11
+
+The user authorized exclusion of samples whose labels cross the end of a
+training or validation period. For every horizon, retain only eligible samples
+with `observation_time + horizon < partition_end`, in both expanding folds and
+final training. The final cutoff remains `2021-01-01 00:00 UTC` (exclusive).
+
+Hyperparameters, model families and OOF thresholds were reselected using only
+corrected pre-2021 validation. Current production configurations are recorded in
+`docs/validation/validated_configurations.json`; the training script reads this
+file as the single source of configurations. All older configuration/result
+sections below are retained as **historical experimental results before this
+correction**, rather than current production instructions.
+
+| Horizon | Current model | Current parameters | Current threshold |
+|---|---|---|---|
+| +1h | LogisticRegression + StandardScaler Pipeline | C=0.01 | 0.99 |
+| +2h | RandomForestClassifier | max_depth=None, min_samples_leaf=10 | 0.06 |
+| +3h | RandomForestClassifier | max_depth=4, min_samples_leaf=1 | 0.78 |
+| +4h | RandomForestClassifier | max_depth=4, min_samples_leaf=10 | 0.79 |
+| +5h | LogisticRegression + StandardScaler Pipeline | C=0.01 | 0.85 |
+| +6h | RandomForestClassifier | max_depth=8, min_samples_leaf=1 | 0.67 |
+
+Other estimator parameters remain the documented ones: Logistic Regression uses
+balanced weights and max_iter=3000; Random Forest uses 300 estimators,
+balanced_subsample weights and n_jobs=-1; random_state=42 applies to both.
+The 20 features, station, effective period and 10 mm/h operational definition
+remain as documented. No missing observations are imputed.
+
+Final training counts are 25,585 / 25,569 / 25,552 / 25,538 / 25,525 / 25,513.
+The correction removes 1–6 negative labels at each relevant boundary and no
+positive events. The +1h confusion counts remain TP=17, FP=83, FN=21.
+Full corrected results and the historical comparison are in
+`docs/validation/README.md` and `docs/validation/corrected_final_evaluation_results.csv`.
+
+Production training and artifact serialization are implemented and validated.
+Inference/application integration remains the next task. Do not silently revert
+to the historical configurations or rank/select models using the 2021 test.
+
 
 ## Critical Methodological Rules
 
@@ -153,9 +192,9 @@ Approximately 46% of the training-period wind observations were unavailable, and
 Do not reintroduce wind variables into the final supervised models without explicitly re-evaluating this problem.
 
 
-## Final Model Configurations
+## Historical Final Model Configurations (before 2026-10-11 correction)
 
-These configurations were selected using pre-2021 validation.
+These historical configurations are superseded by the approved correction above.
 
 Do not change them silently.
 
@@ -364,7 +403,7 @@ Completed notebooks:
 - `12_final_evaluation.ipynb`
 
 
-## Current Project Stage
+## Historical Project Stage at Original Handoff
 
 The experimental Data Science stage is complete.
 

@@ -1,5 +1,51 @@
 # Project Handoff — Recife Rain Nowcasting ML
 
+## Approved update — 2026-10-11
+
+The original handoff below is preserved as an experimental snapshot. Its final
+configurations, sample counts, supervised results and unfinished-training status
+are historical and are superseded by this explicitly authorized correction.
+
+The original split checked only observation time `t`. The user authorized purging
+samples whose target timestamp reaches the next reserved period. Every training
+and validation partition now requires `t + horizon < partition_end`, in addition
+to the existing `eligible_final_Xh` flags. All three year boundaries were audited;
+1 / 2 / 3 / 4 / 5 / 6 negative samples were removed per horizon at each applicable
+boundary, with zero positive labels removed.
+
+The original hyperparameter grids and OOF threshold procedure were rerun on the
+corrected 2018→2019 and 2018–2019→2020 folds. Parameters and families were chosen
+by mean validation Average Precision; thresholds were chosen by pre-2021 OOF F1
+with recall/precision tie breaks. The six choices were frozen before the new
+2021 evaluation. The notebook's 2021 F1 ranking was not used for selection.
+
+| Horizon | Current model | Parameters | Threshold |
+|---|---|---|---|
+| +1h | LogisticRegression + StandardScaler Pipeline | C=0.01 | 0.99 |
+| +2h | RandomForestClassifier | max_depth=None, min_samples_leaf=10 | 0.06 |
+| +3h | RandomForestClassifier | max_depth=4, min_samples_leaf=1 | 0.78 |
+| +4h | RandomForestClassifier | max_depth=4, min_samples_leaf=10 | 0.79 |
+| +5h | LogisticRegression + StandardScaler Pipeline | C=0.01 | 0.85 |
+| +6h | RandomForestClassifier | max_depth=8, min_samples_leaf=1 | 0.67 |
+
+Fixed class weights, 300 RF estimators, LR max_iter=3000, random_state=42 and
+RF n_jobs=-1 remain as documented. The effective period, A301 station, 20
+features and operational rainfall threshold remain as originally defined.
+
+`src/models/train_final_models.py` now trains only the corrected 2018–2020
+samples and creates/reloads all six joblib artifacts and `model_metadata.json`.
+Both training observation timestamps and target timestamps remain before 2021.
+Current configurations live in `docs/validation/validated_configurations.json`.
+
+See `docs/validation/README.md` for all removed sample/event counts, corrected
+results, explicit historical comparisons, reproduction commands and limitations.
+Original CSVs are preserved byte-for-byte in `docs/validation/history/` and the
+original processed result files remain untouched.
+
+The immediate next task after this update is `src/models/predict.py`. Do not
+retrain or select using the historical tables below without the boundary rule.
+No commit or push has been made.
+
 ## 1. Project Status
 
 Repository:

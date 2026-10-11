@@ -29,7 +29,10 @@ Each forecasting horizon will be evaluated separately.
 
 The research uses hourly meteorological observations from an INMET weather station in Recife, Pernambuco, Brazil.
 
-**Research period:** 2018–2024.
+**Effective modeling period:** 2018-01-01 00:00 UTC through 2021-11-12 06:00 UTC,
+using station **A301 (Recife)**. The original proposal covered 2018–2024;
+2022–2023 meteorological variables were unavailable, and A301 data were not found
+in the inspected official 2024 historical package.
 
 Variables investigated include:
 
@@ -40,11 +43,14 @@ Variables investigated include:
 - wind measurements
 - temporal features derived from the observation timestamp
 
-> The exact station identifier, download URL, raw filenames, and data access date will be documented in `data/README.md` when the dataset is added to the repository.
+Wind variables were investigated but excluded from the final supervised models
+because of missingness. Missing measurements and targets are not replaced with
+zero. The project-specific severe-rainfall definition is **precipitation >=
+10.0 mm/h**; this is not an official INMET threshold.
 
 ## Methodology
 
-The planned data science workflow is:
+The experimental data science workflow is complete:
 
 1. Data collection and validation
 2. Missing-data and temporal-continuity analysis
@@ -61,12 +67,11 @@ The planned data science workflow is:
 
 ## Machine Learning
 
-Initial supervised models planned for comparison:
+Supervised models compared:
 
 - Dummy Classifier
 - Logistic Regression
 - Random Forest
-- Gradient Boosting
 
 Complementary unsupervised analysis:
 
@@ -81,7 +86,38 @@ Because heavy-rainfall events may be much less frequent than non-events, model e
 - PR-AUC
 - Confusion Matrix
 
-The final choice of metrics may be adjusted after the target distribution is inspected.
+Final training uses 2018–2020; 2021 is reserved for evaluation. Selection uses
+expanding folds (train 2018 / validate 2019, train 2018–2019 / validate 2020).
+Every partition requires **observation time + horizon < partition end**, so
+training and validation labels cannot enter a future reserved period.
+
+## Validated Production Models — 2026-10-11
+
+The user authorized a temporal label-boundary correction and repetition of
+pre-2021 hyperparameter/threshold selection. This update supersedes the original
+notebook results. Old results remain available as clearly identified history in
+[the correction report](docs/validation/README.md).
+
+| Horizon | Model | RF depth / leaf | Threshold |
+|---|---|---|---:|
+| +1h | Logistic Regression | — | 0.99 |
+| +2h | Random Forest | None / 10 | 0.06 |
+| +3h | Random Forest | 4 / 1 | 0.78 |
+| +4h | Random Forest | 4 / 10 | 0.79 |
+| +5h | Logistic Regression | — | 0.85 |
+| +6h | Random Forest | 8 / 1 | 0.67 |
+
+Logistic Regression uses StandardScaler in a training-only pipeline, `C=0.01`,
+balanced class weights and `max_iter=3000`. Random Forest uses 300 estimators,
+`balanced_subsample` weights and `n_jobs=-1`. Both use `random_state=42`.
+The fixed, ordered 20-feature list lives in the training module.
+
+The primary +1h model retains precision 0.170, recall 0.447 and F1 0.246 on the
+2021 test: 17 true positives, 83 false positives and 21 false negatives.
+Full corrected results and all historical comparisons are in the
+[validation report](docs/validation/README.md) and its CSVs. Model choices use
+validation Average Precision, with thresholds selected by pre-2021 OOF F1;
+2021 results are not used to select or revise the configurations.
 
 ## Project Structure
 
@@ -109,20 +145,23 @@ recife-rain-nowcasting-ml/
 
 ## Current Status
 
-🚧 **Project under active development.**
+**Production training is implemented and validated.** Inference and application
+integration remain to be implemented.
 
 ### Roadmap
 
-- [ ] Add and document the INMET dataset
-- [ ] Audit dataset structure and quality
-- [ ] Check missing timestamps and duplicated observations
-- [ ] Perform exploratory data analysis
-- [ ] Define the operational heavy-rainfall threshold
-- [ ] Build forecasting targets for +1h to +6h
-- [ ] Establish baseline models
-- [ ] Train supervised ML models
-- [ ] Compare performance across forecasting horizons
-- [ ] Analyze meteorological patterns using clustering
+- [x] Add and document the INMET dataset
+- [x] Audit dataset structure and quality
+- [x] Check missing timestamps and duplicated observations
+- [x] Perform exploratory data analysis
+- [x] Define the operational heavy-rainfall threshold
+- [x] Build forecasting targets for +1h to +6h
+- [x] Establish baseline models
+- [x] Train supervised ML models
+- [x] Compare performance across forecasting horizons
+- [x] Analyze meteorological patterns using clustering
+- [x] Correct temporal label boundaries and revalidate model selection
+- [x] Create reproducible training, serialized artifacts and metadata
 - [ ] Create a prediction API
 - [ ] Develop an application prototype
 
@@ -179,6 +218,29 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+With `data/processed/recife_2018_2021_model_dataset.csv` available locally:
+
+```bash
+python src/models/train_final_models.py
+python -m unittest discover -s tests -v
+```
+
+The training command uses the version-controlled
+[validated configurations](docs/validation/validated_configurations.json) and
+saves `models/model_1h.joblib` through `model_6h.joblib` plus
+`model_metadata.json`. Each joblib contains the fitted estimator and the
+metadata required to preserve features, horizon and alert threshold.
+Processed datasets and generated model artifacts remain ignored by Git.
+
+To reproduce the authorized selection correction and historical comparison:
+
+```bash
+python -m src.evaluation.revalidate_temporal_boundaries
+```
+
+See the [validation report](docs/validation/README.md) for the tested environment
+versions, boundary counts and limitations of the recalculated historical test.
 
 ## Disclaimer
 

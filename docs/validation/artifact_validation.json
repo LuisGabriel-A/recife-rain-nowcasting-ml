@@ -1,0 +1,81 @@
+{
+  "all_checks_passed": true,
+  "continuous_hourly_grid": true,
+  "targets_match_observed_future_rainfall_without_imputation": true,
+  "derived_features_match_current_and_past_only": true,
+  "eligibility_flags_match_completeness": true,
+  "historical_csvs_byte_identical": true,
+  "model_count": 6,
+  "models": [
+    {
+      "horizon_hours": 1,
+      "training_samples": 25585,
+      "training_positives": 70,
+      "latest_observation_utc": "2020-12-31T22:00:00+00:00",
+      "latest_target_utc": "2020-12-31T23:00:00+00:00",
+      "metadata_matches": true,
+      "features_and_classes_valid": true,
+      "scaler_training_only": true,
+      "corrected_test_metrics_match": true
+    },
+    {
+      "horizon_hours": 2,
+      "training_samples": 25569,
+      "training_positives": 70,
+      "latest_observation_utc": "2020-12-31T21:00:00+00:00",
+      "latest_target_utc": "2020-12-31T23:00:00+00:00",
+      "metadata_matches": true,
+      "features_and_classes_valid": true,
+      "scaler_training_only": null,
+      "corrected_test_metrics_match": true
+    },
+    {
+      "horizon_hours": 3,
+      "training_samples": 25552,
+      "training_positives": 70,
+      "latest_observation_utc": "2020-12-31T20:00:00+00:00",
+      "latest_target_utc": "2020-12-31T23:00:00+00:00",
+      "metadata_matches": true,
+      "features_and_classes_valid": true,
+      "scaler_training_only": null,
+      "corrected_test_metrics_match": true
+    },
+    {
+      "horizon_hours": 4,
+      "training_samples": 25538,
+      "training_positives": 70,
+      "latest_observation_utc": "2020-12-31T19:00:00+00:00",
+      "latest_target_utc": "2020-12-31T23:00:00+00:00",
+      "metadata_matches": true,
+      "features_and_classes_valid": true,
+      "scaler_training_only": null,
+      "corrected_test_metrics_match": true
+    },
+    {
+      "horizon_hours": 5,
+      "training_samples": 25525,
+      "training_positives": 69,
+      "latest_observation_utc": "2020-12-31T18:00:00+00:00",
+      "latest_target_utc": "2020-12-31T23:00:00+00:00",
+      "metadata_matches": true,
+      "features_and_classes_valid": true,
+      "scaler_training_only": true,
+      "corrected_test_metrics_match": true
+    },
+    {
+      "horizon_hours": 6,
+      "training_samples": 25513,
+      "training_positives": 69,
+      "latest_observation_utc": "2020-12-31T17:00:00+00:00",
+      "latest_target_utc": "2020-12-31T23:00:00+00:00",
+      "metadata_matches": true,
+      "features_and_classes_valid": true,
+      "scaler_training_only": null,
+      "corrected_test_metrics_match": true
+    }
+  ],
+  "all_frozen_configurations_match_pre_2021_ap_winners": true,
+  "all_positive_class_columns_are_class_1": true,
+  "historical_notebook_code_outputs_and_metadata_preserved": true,
+  "unit_tests_passed": 11
+}

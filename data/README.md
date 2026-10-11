@@ -2,14 +2,22 @@
 
 This directory contains the datasets used by the Recife Rain Nowcasting project.
 
-## Planned source
+## Source and effective scope
 
 - **Institution:** Instituto Nacional de Meteorologia (INMET)
 - **Location:** Recife, Pernambuco, Brazil
 - **Temporal resolution:** Hourly observations
-- **Research period:** 2018–2024
+- **Station:** A301 — Recife
+- **Effective modeling period:** 2018-01-01 00:00 UTC through 2021-11-12 06:00 UTC
 
-The research document does not yet identify the exact INMET station code or the exact data-download URL. These fields should be completed when the original dataset is added.
+The initial proposal covered 2018–2024. The inspected A301 data for 2022–2023
+did not contain the principal meteorological measurements, and A301 data were
+not found in the inspected official 2024 historical package. These years are
+excluded from modeling; another station has not been substituted.
+
+The exact original download URLs, access dates and usage notes still need to be
+completed. The station and effective period above are established by the data
+audit recorded in `docs/PROJECT_HANDOFF.md`.
 
 ## Directory convention
 
@@ -38,11 +46,26 @@ Contains datasets created from the raw observations after steps such as:
 - feature engineering;
 - target generation.
 
+The production input is `recife_2018_2021_model_dataset.csv`: 33,871 hourly
+timestamps, the ordered 20 features, six targets and horizon-specific
+`eligible_final_Xh` flags. The `recife_2018_2023_hourly.csv` file is a broader
+audit intermediate; its filename does not mean 2022–2023 were used for modeling.
+
+Original supervised result CSVs remain historical. Corrected results, frozen
+configurations, sample/event counts and byte-identical historical copies live in
+[`docs/validation/`](../docs/validation/README.md).
+
 ## Important temporal rule
 
 A missing observation must **not** automatically be interpreted as zero precipitation.
 
 Before building future targets (+1h to +6h), the pipeline must verify that timestamps represent the expected hourly intervals.
+
+Each target is severe rainfall at `t+h`, using the project-specific operational
+definition `precipitation >= 10.0 mm/h`, rather than an official INMET definition.
+Missing future measurements remain missing targets. Features use current/past
+measurements only. Training and validation require `t+h < partition_end` so that
+labels do not cross into a future reserved period.
 
 ## Data versioning policy
 
@@ -52,15 +75,15 @@ This avoids accidentally committing large datasets or redistributing source data
 
 The directory structure itself is preserved with `.gitkeep` files.
 
-## Metadata to complete when data is added
+## Dataset metadata and remaining provenance fields
 
-- INMET station name:
-- INMET station code:
-- Exact download URL:
-- Date accessed:
-- Raw filename(s):
-- File format:
-- Number of records:
-- First timestamp:
-- Last timestamp:
-- Usage/license notes:
+- INMET station name: Recife
+- INMET station code: A301
+- Exact original download URLs: pending documentation
+- Date accessed: pending documentation
+- Raw filename(s): pending source provenance documentation
+- Final model-dataset format: CSV
+- Final model-dataset records: 33,871
+- First model-dataset timestamp: 2018-01-01 00:00 UTC
+- Last model-dataset timestamp: 2021-11-12 06:00 UTC
+- Usage/license notes: pending documentation
