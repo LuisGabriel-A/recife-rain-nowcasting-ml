@@ -29,3 +29,21 @@ metric rows to tolerance 1e-12, without training or rewriting result files.
 Integration tests explicitly skip if ignored local models/data are absent. Supply
 these files and verify no skips to validate complete integration. No test overwrites
 the production artifacts.
+
+Citizen application tests cover official CSV units/provenance, missing values,
+station refusal, latest partial records, gaps, future timestamps, runtime
+freshness, expired horizons and historical isolation. Optional Web Push tests
+check persistent keys, revocation, actual payload encryption/signing with mocked
+HTTP delivery, provider/private-IP restrictions, redirect refusal, deduplication,
+expiry and retry/removal behavior. Install `requirements-webpush.txt` to run
+these tests without skips. They never send real notifications to a person.
+
+The service worker's independent tests use Node's built-in runner:
+
+```powershell
+node --test tests/test_service_worker.cjs
+```
+
+They check current/expired/malformed notification handling, offline API exclusion
+and safe notification-click navigation. Node is only needed for frontend checks;
+the application itself runs with Python and a browser.

@@ -10,7 +10,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-def check_environment(development=False):
+def check_environment(development=False, webpush=False):
     expected_python = (PROJECT_ROOT / ".python-version").read_text(encoding="utf-8").strip()
     actual_python = platform.python_version()
     errors = []
@@ -19,6 +19,8 @@ def check_environment(development=False):
     files = [PROJECT_ROOT / "requirements.txt"]
     if development:
         files.append(PROJECT_ROOT / "requirements-dev.txt")
+    if webpush:
+        files.append(PROJECT_ROOT / "requirements-webpush.txt")
     packages = {}
     for path in files:
         for line in path.read_text(encoding="utf-8").splitlines():
@@ -41,9 +43,10 @@ def check_environment(development=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--development", action="store_true")
+    parser.add_argument("--webpush", action="store_true")
     args = parser.parse_args()
     try:
-        print(json.dumps(check_environment(args.development), indent=2))
+        print(json.dumps(check_environment(args.development, args.webpush), indent=2))
     except ValueError as exc:
         parser.exit(1, f"{exc}\n")
 

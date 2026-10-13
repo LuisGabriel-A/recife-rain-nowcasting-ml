@@ -13,6 +13,12 @@ os próximos passos para conectar o aplicativo a observações atuais do INMET.
 Autoria formal, proveniência dos arquivos originais e termos de uso/licença
 continuam pendentes antes de uma submissão acadêmica.
 
+Após esta edição, a aplicação foi adaptada para o **AlertaChuva Recife**, com
+tela simples para famílias, importação de observações recentes e Web Push.
+O PDF conserva a interface anterior como registro histórico; modelos/resultados
+não mudaram. O estado atual está no [alinhamento do produto](../PRODUCT_ALIGNMENT.md)
+e no [guia da aplicação](../../app/README.md).
+
 ## Fontes e geração
 
 O [texto-fonte](../artigo_recife_rain_nowcasting.md) contém marcadores para tabelas.

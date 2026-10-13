@@ -35,3 +35,11 @@ python -m unittest discover -s tests -v
 
 See [the inference guide](../docs/INFERENCE.md). Training and reselection commands
 above are explicit reproduction tools; routine inference does not need them.
+
+`data/inmet_recent.py` imports the official A301 table CSV into private runtime
+state with source hash/attestation. It converts decimal commas and missing-data
+sentinels without filling values, and validates seven consecutive hours.
+`models/alert_status.py` presents the existing decisions for citizens, rejecting
+stale/future observations and expired forecast hours. These modules never change
+the experimental dataset, fitted models or thresholds. The runtime supports
+optional notifications through `app/webpush.py`; see [application setup](../app/README.md).

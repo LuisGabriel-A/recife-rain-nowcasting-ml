@@ -68,3 +68,6 @@ htmlcov/
 
 # Packaging / local notebooks output
 *.tmp
+
+# Application runtime observations, Web Push subscriptions and private VAPID keys
+app/.state/

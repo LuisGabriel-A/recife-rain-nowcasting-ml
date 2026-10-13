@@ -15,6 +15,29 @@ This project investigates whether historical meteorological observations can be 
 
 The goal is not to replace official meteorological warning systems, but to explore a complementary data-driven approach capable of transforming meteorological data into information that can later be consumed by an accessible application.
 
+## AlertaChuva Recife — citizen application
+
+The purpose is **simple severe-rainfall notices for families in Recife**,
+including people unfamiliar with technology. The home page shows the current
+notice, forecast hours and one opt-in notification button, without accounts or
+meteorological forms. The technical interface is retained at `/laboratorio`.
+This is an installable web application (PWA).
+
+The operator imports recent A301 observations from the official INMET table;
+the six existing models then produce forecasts without retraining. Incomplete
+or more-than-two-hour-old observations suppress forecasts and push alerts.
+Historical demonstrations keep their original dates and cannot send weather push.
+
+Web Push registration, encrypted delivery and a background monitor are
+implemented. **Continuous automatic INMET ingestion, public HTTPS hosting and
+end-to-end push verification on a real phone remain pending.** Citizens do not
+enter measurements. See [application setup](app/README.md),
+[product alignment](docs/PRODUCT_ALIGNMENT.md) and
+[current validation](docs/validation/citizen_app_checks.json).
+
+The PDF preserves the earlier software snapshot; these updated guides document
+the current application. Scientific models/results are unchanged.
+
 ## Prediction Task
 
 Given the meteorological information available at time `t`, the system will predict the occurrence of heavy rainfall independently for:
@@ -185,13 +208,14 @@ and [handoff](docs/PROJECT_HANDOFF.md).
 Run the demonstration with the existing environment/artifacts:
 
 ```powershell
-& .\.venv-1\Scripts\python.exe -m app.server --port 8000
+& .\.venv-repro\Scripts\python.exe -m app.server --port 8000
 ```
 
 Then open [the local application](http://127.0.0.1:8000). See
 [application instructions](app/README.md) and
 [software validation evidence](docs/validation/productionization.md).
-The prototype uses manual/historical input; it has no live station feed.
+The citizen page uses imported recent A301 data. An automatic continuous station
+feed remains pending; manual/historical input is available in the laboratory.
 
 ## Research Questions
 

@@ -66,12 +66,33 @@ class HttpTests(unittest.TestCase):
                 return response.status, body, response.headers
 
     def test_static_health_and_examples(self):
-        for path in ("/", "/styles.css", "/app.js", "/api/health", "/api/examples"):
+        for path in ("/", "/styles.css", "/app.js", "/api/health", "/api/examples", "/api/status", "/api/push/config", "/manifest.webmanifest", "/sw.js", "/icon.svg", "/icon-180.png", "/icon-192.png", "/icon-512.png", "/laboratorio", "/laboratory.js", "/laboratory.css"):
             with self.subTest(path=path):
                 status, body, headers = self.request(path)
                 self.assertEqual(status, 200)
                 self.assertIn("default-src 'self'", headers["Content-Security-Policy"])
         self.assertEqual(self.request("/api/health")[1]["thresholds"], [0.99, 0.06, 0.78, 0.79, 0.85, 0.67])
+
+    def test_push_disabled_missing_demo_and_private_state_not_exposed(self):
+        self.assertFalse(self.request("/api/push/config")[1]["enabled"])
+        self.assertEqual(self.request("/api/push/subscribe", {"endpoint": "test"})[0], 503)
+        self.assertEqual(self.request("/api/demo/1")[0], 404)
+        self.assertEqual(self.request("/.state/vapid_private.pem")[0], 404)
+
+    def test_cross_origin_requests_rejected(self):
+        req = Request(self.url + "/api/push/subscribe", data=b"{}", headers={"Content-Type": "application/json", "Origin": "https://other.example"})
+        with self.assertRaises(HTTPError) as result:
+            urlopen(req, timeout=10)
+        self.assertEqual(result.exception.code, 403)
+
+    def test_citizen_home_has_no_measurement_form_and_status_has_no_scores(self):
+        home = self.request("/")[1].decode("utf-8")
+        self.assertNotIn("<input", home)
+        self.assertIn("Receber avisos", home)
+        body = self.request("/api/status")[1]
+        self.assertIn(body["state"], ("attention", "no_signal", "unavailable"))
+        self.assertNotIn("probability", str(body))
+        self.assertEqual(body["station_code"], "A301")
 
     def test_history_predictions_have_six_correct_forecast_times(self):
         status, body, _ = self.request("/api/predict", {"observations": synthetic_records()})

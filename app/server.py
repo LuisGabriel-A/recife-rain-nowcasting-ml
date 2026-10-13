@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import threading
 from functools import partial
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,6 +15,10 @@ from src.data.json_input import parse_json
 from src.features.schema import OBSERVATION_COLUMNS
 from src.models.config import INPUT_PATH, OUTPUT_DIR
 from src.models.predict import RainPredictor
+from src.models.alert_status import current_status, citizen_forecast
+from src.data.inmet_recent import STATE_PATH
+from datetime import datetime, timezone
+from app.webpush import PUSH_CONTACT, PushService
 
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -49,9 +54,19 @@ def load_examples(dataset_path=INPUT_PATH):
 
 
 class ForecastApplication:
-    def __init__(self, predictor, examples=None):
+    def __init__(self, predictor, examples=None, observation_path=STATE_PATH, push_service=None):
         self.predictor = predictor
         self.examples = [] if examples is None else examples
+        self.observation_path = observation_path
+        self.push_service = push_service
+
+    def status(self):
+        return current_status(self, self.observation_path)
+
+    def demo(self, index):
+        if index < 0 or index >= len(self.examples):
+            raise ValueError("Exemplo indisponível neste servidor.")
+        return citizen_forecast(self, self.examples[index]["observations"], datetime.now(timezone.utc), demo=True)
 
     def predict(self, payload):
         if not isinstance(payload, dict) or set(payload) not in ({"observations"}, {"features"}):
@@ -109,27 +124,50 @@ class RequestHandler(BaseHTTPRequestHandler):
             })
         elif path == "/api/examples":
             self._reply(200, {"examples": self.application.examples})
-        elif path in ("/", "/index.html", "/styles.css", "/app.js"):
-            filename = "index.html" if path == "/" else path[1:]
-            mime = {"index.html": "text/html", "styles.css": "text/css", "app.js": "text/javascript"}[filename]
+        elif path == "/api/status":
+            self._reply(200, self.application.status())
+        elif path in ("/api/demo/0", "/api/demo/1"):
+            try:
+                self._reply(200, self.application.demo(int(path[-1])))
+            except ValueError:
+                self._reply(404, {"error": "Demonstração indisponível."})
+        elif path == "/api/push/config":
+            service = self.application.push_service
+            self._reply(200, service.config() if service else {"enabled": False, "public_key": None})
+        elif path in ("/", "/index.html", "/styles.css", "/app.js", "/sw.js", "/manifest.webmanifest", "/icon.svg", "/icon-180.png", "/icon-192.png", "/icon-512.png", "/laboratorio", "/laboratory.css", "/laboratory.js"):
+            filename = "index.html" if path in ("/", "/index.html") else "laboratory.html" if path == "/laboratorio" else path[1:]
+            extension = Path(filename).suffix
+            mime = {".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".webmanifest": "application/manifest+json", ".svg": "image/svg+xml", ".png": "image/png"}[extension]
             self._reply(200, (STATIC_DIR / filename).read_bytes(), mime + "; charset=utf-8")
         else:
             self._reply(404, {"error": "Rota não encontrada."})
 
     def do_POST(self):
-        if urlsplit(self.path).path != "/api/predict":
+        path = urlsplit(self.path).path
+        if path not in ("/api/predict", "/api/push/subscribe", "/api/push/unsubscribe"):
             self._reply(404, {"error": "Rota não encontrada."})
             return
         if self.headers.get_content_type() != "application/json":
             self._reply(415, {"error": "Use Content-Type: application/json."})
             return
         try:
+            origin = self.headers.get("Origin")
+            if origin and urlsplit(origin).netloc != self.headers.get("Host"):
+                self._reply(403, {"error": "Origem da consulta não permitida."})
+                return
             length = int(self.headers.get("Content-Length", "0"))
             if not 0 < length <= MAX_BODY_BYTES:
                 self._reply(413, {"error": "O corpo JSON deve ter entre 1 e 65536 bytes."})
                 return
             payload = parse_json(self.rfile.read(length))
-            self._reply(200, self.application.predict(payload))
+            if path == "/api/predict":
+                self._reply(200, self.application.predict(payload))
+            else:
+                service = self.application.push_service
+                if service is None or not service.enabled:
+                    self._reply(503, {"error": "Avisos push indisponíveis neste servidor."})
+                else:
+                    self._reply(200, service.subscribe(payload) if path.endswith("/subscribe") else service.unsubscribe(payload))
         except (ValueError, TypeError, KeyError, UnicodeError, OverflowError) as exc:
             self._reply(400, {"error": f"Entrada inválida: {exc}"})
 
@@ -146,20 +184,34 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--model-dir", type=Path, default=OUTPUT_DIR)
+    parser.add_argument("--push-contact", default=PUSH_CONTACT, help="URL HTTPS de contato do operador para VAPID")
     args = parser.parse_args()
     try:
         predictor = RainPredictor(args.model_dir)
-        application = ForecastApplication(predictor, load_examples())
+        push_service = PushService(contact=args.push_contact)
+        application = ForecastApplication(predictor, load_examples(), push_service=push_service)
         server = create_server(application, args.port)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(1, f"Não foi possível iniciar o protótipo: {exc}\n")
-    print(f"Recife Rain | http://127.0.0.1:{server.server_port} | Ctrl+C para encerrar", flush=True)
+    stopped = threading.Event()
+    def monitor():
+        while not stopped.is_set():
+            try:
+                push_service.dispatch(application.status())
+            except (OSError, ValueError):
+                print("Monitor aguardando observações válidas.", flush=True)
+            stopped.wait(60)
+    worker = threading.Thread(target=monitor, daemon=True)
+    worker.start()
+    print(f"AlertaChuva Recife | http://127.0.0.1:{server.server_port} | Ctrl+C para encerrar", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         pass
     finally:
+        stopped.set()
         server.server_close()
+        worker.join(timeout=2)
 
 
 if __name__ == "__main__":

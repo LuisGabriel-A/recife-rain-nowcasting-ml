@@ -5,6 +5,12 @@ the local application are now implemented. See [productionization.md](production
 for current software checks. This report retains the scientific correction and
 historical record from checkpoint `7279eed`; its results/configurations are unchanged.
 
+Citizen application follow-up (2026-10-13): simple notices, official recent CSV
+import and optional standards Web Push are implemented. Current software
+checks and remaining operational gaps are in [citizen_app_checks.json](citizen_app_checks.json)
+and [product alignment](../PRODUCT_ALIGNMENT.md). None of the scientific tables,
+selection records or corrected metrics below changed.
+
 The user explicitly authorized this correction after an audit found that the
 original notebooks split samples by the observation timestamp `t` only. The last
 `h` eligible observations of each year had `target_hh` labels derived from the

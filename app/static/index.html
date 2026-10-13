@@ -1,61 +1,14 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Protótipo acadêmico de previsão de chuva severa em Recife, com seis horizontes horários.">
-  <title>Recife Rain · Laboratório de previsão</title>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
-</head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="/" aria-label="Recife Rain, início"><span class="brand-mark" aria-hidden="true">≋</span> RECIFE RAIN</a>
-    <span class="project-tag">UFRPE · PROTÓTIPO ACADÊMICO</span>
-  </header>
-  <main>
-    <section class="intro">
-      <div>
-        <p class="eyebrow">OBSERVAR. APRENDER. ANTECIPAR.</p>
-        <h1>As próximas horas,<br><em>sob outro olhar.</em></h1>
-        <p class="intro-text">Explore como observações meteorológicas de Recife se traduzem em previsões de chuva severa, de +1h a +6h.</p>
-      </div>
-      <aside class="station"><span class="station-dot"></span><strong>A301 · Recife, PE</strong><br><span>Uma estação. Seis horizontes.</span><br><span id="connection">Carregando modelos…</span></aside>
-    </section>
-
-    <div class="workspace">
-      <section class="panel input-panel" aria-labelledby="input-title">
-        <div class="section-top"><span class="step">01</span><h2 id="input-title">Histórico observado</h2><span class="small-tag">7 HORAS · UTC</span></div>
-        <p class="muted">Informe as horas de t−6h até t. A última linha define o instante da previsão. Todas as medidas são obrigatórias.</p>
-        <label for="example">Escolha um cenário</label>
-        <select id="example"><option value="synthetic">Exemplo sintético · editável</option></select>
-        <p id="example-note" class="source-note">Valores sintéticos para demonstrar a interface.</p>
-        <form id="forecast-form">
-          <div class="table-scroll"><table>
-            <caption class="sr-only">Sete observações horárias editáveis</caption>
-            <thead><tr><th>Data / hora UTC</th><th>Chuva<br><span>mm/h</span></th><th>Temp.<br><span>°C</span></th><th>Umid.<br><span>%</span></th><th>Pressão<br><span>mb</span></th></tr></thead>
-            <tbody id="history"></tbody>
-          </table></div>
-          <button id="predict-button" type="submit">Consultar os seis horizontes <span aria-hidden="true">↗</span></button>
-          <p id="error" class="error" role="alert" hidden></p>
-        </form>
-        <details class="technical"><summary>Entrada e saída JSON</summary><pre id="request-json">Consulte uma previsão para ver os dados enviados.</pre><pre id="response-json"></pre><button id="download" type="button" disabled>Baixar resultado JSON</button></details>
-      </section>
-
-      <section class="output-panel" aria-labelledby="output-title">
-        <div class="section-top"><span class="step">02</span><h2 id="output-title">Horizontes de previsão</h2></div>
-        <p id="forecast-context" class="muted" aria-live="polite">Pronto para consultar. Os modelos utilizam apenas o histórico informado.</p>
-        <div id="predictions" class="prediction-grid" aria-live="polite"></div>
-        <p class="score-note"><strong>Como ler:</strong> o score é comparado ao threshold de cada modelo. Ele não representa uma probabilidade meteorológica calibrada. A previsão se refere à hora indicada, não ao acumulado do intervalo.</p>
-      </section>
-    </div>
-
-    <section class="method-strip" aria-label="Contexto científico">
-      <div><span class="eyebrow">DEFINIÇÃO DO PROJETO</span><strong>≥ 10 mm/h</strong><p>Chuva severa na hora prevista. Critério operacional, sem caráter oficial do INMET.</p></div>
-      <div><span class="eyebrow">DADOS EFETIVOS</span><strong>2018–2021</strong><p>A301, até 12/11/2021 às 06 UTC. Treino: 2018–2020; avaliação: 2021.</p></div>
-      <div><span class="eyebrow">USO ACADÊMICO</span><strong>Uma camada complementar</strong><p>Há falsos alertas e eventos não detectados. Consulte os avisos oficiais; este protótipo não oferece dados em tempo real.</p></div>
-    </section>
-  </main>
-  <footer>Recife Rain Nowcasting ML <span>Ciência de dados · Observações horárias · Inferência local</span></footer>
-</body>
-</html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#145dc5"><meta name="description" content="Avisos simples de chuva forte para Recife."><link rel="apple-touch-icon" href="/icon-180.png"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"><title>AlertaChuva Recife</title><script src="/app.js" defer></script></head>
+<body><a class="skip-link" href="#aviso">Ir para o aviso de chuva</a>
+<header class="topbar"><a class="brand" href="/" aria-label="AlertaChuva Recife, início"><img src="/icon.svg" width="48" height="48" alt=""><span>AlertaChuva <small>RECIFE</small></span></a><button id="open-settings" class="quiet-button" type="button">Ajustes</button></header>
+<main><div class="intro"><p class="eyebrow">INFORMAÇÃO PARA VOCÊ SE PROTEGER DA CHUVA</p><h1>Um aviso simples.<br>Mais tempo para se cuidar.</h1><p>Veja a indicação de chuva forte para Recife e ative os avisos no seu aparelho.</p></div>
+<div id="demo-banner" class="demo-banner" hidden><strong>Demonstração com dados históricos</strong><span>Este exemplo não é uma previsão de hoje.</span><button id="leave-demo" type="button">Voltar para agora</button></div>
+<section id="aviso" class="status-card unavailable" aria-labelledby="status-title" aria-live="polite" aria-busy="true"><div class="status-heading"><span class="location">RECIFE · PERNAMBUCO</span><span id="status-badge" class="status-badge">Consultando</span></div><div class="status-content"><div id="status-symbol" class="status-symbol" aria-hidden="true">…</div><div><h2 id="status-title">Buscando a atualização</h2><p id="status-message">Um instante enquanto consultamos os dados disponíveis.</p></div></div><p id="updated" class="updated">Os horários são apresentados no horário de Recife.</p></section>
+<section class="forecast-section" aria-labelledby="hours-title"><div class="section-heading"><h2 id="hours-title">Próximas horas</h2><span>Horário de Recife</span></div><div id="hours" class="hours"><p class="empty-hours">Aguardando a atualização.</p></div><p class="forecast-note">Cada horário é uma indicação de chuva forte. Pode chover mesmo quando não há indicação.</p></section>
+<section class="notification-card" aria-labelledby="notification-title"><div class="bell" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></svg></div><div><h2 id="notification-title">O aviso chega até você</h2><p id="notification-description">Ative os avisos de chuva forte. Sem cadastro e sem senha.</p><button id="enable-notifications" class="primary-button" type="button">Receber avisos</button><p id="notification-feedback" class="feedback" role="status"></p></div></section>
+<section id="current-section" class="current-section" hidden aria-labelledby="current-title"><h2 id="current-title">Medido na última atualização</h2><div class="current-values"><p><strong id="current-temperature">—</strong><span>Temperatura</span></p><p><strong id="current-humidity">—</strong><span>Umidade</span></p><p><strong id="current-rain">—</strong><span>Chuva na última hora</span></p></div><p class="small-note">Observações do INMET em Recife. Estes valores não são previsões.</p></section>
+<section class="info-section"><div><span class="eyebrow">FÁCIL DE USAR</span><h2>Abra. Confira. Receba o aviso.</h2><p>Você não precisa preencher dados do tempo. A atualização é feita pelo sistema.</p><button id="install-app" class="secondary-button" type="button">Colocar na tela inicial</button><p id="install-feedback" class="feedback" role="status"></p></div><div class="how-card"><h3>Quer conhecer o aplicativo?</h3><p>Veja como aparece um aviso de chuva forte, usando um exemplo histórico.</p><button id="show-demo" class="text-button" type="button">Ver demonstração →</button></div></section>
+<details class="about"><summary>De onde vêm os avisos?</summary><p>Este é um protótipo acadêmico. Os avisos usam modelos de aprendizado de máquina e medições da estação A301 do INMET, em Recife. A indicação é a mesma para a cidade; não é uma previsão específica da sua rua ou bairro.</p><p>O aplicativo pode emitir avisos incorretos ou deixar de identificar uma chuva forte. Acompanhe também as orientações dos órgãos oficiais.</p><p>A consulta automática contínua ao INMET ainda está em integração. Nesta versão, o operador importa as observações recentes. Dados antigos ou incompletos deixam o aviso indisponível.</p><a href="https://tempo.inmet.gov.br/TabelaEstacoes/A301" target="_blank" rel="noopener noreferrer">Consultar a estação no INMET</a></details>
+</main><footer><span>AlertaChuva Recife · Protótipo acadêmico</span><a href="/laboratorio">Laboratório técnico</a></footer>
+<dialog id="settings"><div class="dialog-heading"><h2>Ajustes dos avisos</h2><button id="close-settings" class="quiet-button" aria-label="Fechar ajustes" type="button">Fechar</button></div><p>Os avisos são para Recife. Não pedimos sua localização, endereço ou uma conta.</p><button id="disable-notifications" class="secondary-button" type="button">Desativar avisos neste aparelho</button><button id="test-notification" class="secondary-button" type="button">Mostrar um aviso de teste</button><p id="settings-feedback" class="feedback" role="status"></p><p class="small-note">No celular, instale pela tela inicial. O envio fora desta página depende de um servidor ativo, conexão e permissão do aparelho.</p></dialog></body></html>

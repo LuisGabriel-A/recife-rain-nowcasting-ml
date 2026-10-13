@@ -1,5 +1,67 @@
 # Project Handoff — Recife Rain Nowcasting ML
 
+## Authorized AlertaChuva Git checkpoint — 2026-10-13 (current Git instructions)
+
+After reviewing the new citizen application, the user explicitly requested the
+necessary Git pushes. This authorizes committing the 38 reviewed application,
+test, asset and documentation files and publishing main to origin. The checkpoint
+title is `feat: align AlertaChuva app with citizen alerts`.
+
+`git fetch origin` confirmed no incoming/outgoing commits before this checkpoint;
+the starting commit was `dab3231`. The recorded 57 Python and 4 JavaScript tests
+passed without skips. Publication checks confirm the pinned environment, clean
+dependency check, unchanged scientific/dataset/PDF hashes and exclusion of private
+runtime state. The PDF is already tracked under `docs/articles/` and stays unchanged.
+No production training or scientific selection is repeated for publication.
+
+The earlier no-commit/no-push statements below describe previous task snapshots.
+The latest user instruction supersedes them for this checkpoint only. Automatic
+INMET collection, HTTPS hosting and real-phone push verification remain pending;
+publishing code to GitHub does not deploy the application. Further changes retain
+the project's explicit authorization rules.
+
+## Citizen application alignment — 2026-10-13 (current software status)
+
+The user requested a simple Recife severe-rainfall alert application for families,
+using the supplied AlertaChuva slide as the product reference, and confirmed no
+existing Expo code/Firebase project. The existing Python backend is now integrated
+with a citizen-first installable PWA: direct access without accounts, simple notice,
+six local forecast hours and opt-in notifications. The previous technical UI is
+preserved at `/laboratorio`. See `docs/PRODUCT_ALIGNMENT.md` and `app/README.md`.
+
+Official current A301 observations were obtained through the INMET table's normal
+CSV download, then imported into ignored runtime state with provenance and station
+attestation. This does not extend the historical modeling dataset or fit models.
+The CSV adapter validates seven consecutive hours, missing values, UTC/unit formats,
+duplicates, station/source and future timestamps. Incomplete/stale observations
+suppress notices. Application freshness is two hours; elapsed forecast hours are
+excluded. Historical demos retain their dates and cannot send weather push.
+
+Standards Web Push is implemented with optional pinned dependencies: real browser
+subscriptions, persistent VAPID key, encrypted sending, a 60-second monitor,
+revocation, event deduplication and expiration. Private keys/subscriptions/data stay
+in ignored `app/.state/`. Service-worker caching excludes all forecast APIs.
+Neither payload encryption tests nor the local display test prove real-phone
+delivery. Continuous automatic INMET ingestion, public HTTPS hosting, real-phone
+delivery verification and prospective evaluation remain pending. The official
+table had current measurements; a legacy API returned HTTP 204, and the protected
+portal interface was not bypassed.
+
+The scientific methodology/configurations, six production artifacts, dataset and
+frozen results are unchanged. No training or selection was repeated. The article
+PDF is preserved as the previous software snapshot; updated product/architecture
+guides describe this interface. Publication was subsequently authorized by the user,
+as recorded in the latest Git checkpoint note above.
+The starting checkpoint is `dab3231`, with main aligned to origin/main before edits.
+
+Validation commands, results, hashes and pending-file inventory are recorded in
+`docs/validation/citizen_app_checks.json`. Final checks passed 57 Python tests and
+4 service-worker JavaScript tests, without skips, plus environment/pip checks,
+source compilation, JS syntax and unchanged scientific/PDF/dataset fingerprints.
+The next task is integrating an authorized
+continuous recent-data feed, followed by HTTPS deployment and a real-device push
+test. Do not retrain/reselect models as part of that work.
+
 ## Authorized Git publication — 2026-10-13 (current Git instructions)
 
 The user explicitly authorized comparing local work with GitHub, creating a
