@@ -4,6 +4,9 @@ Machine learning for short-term heavy rainfall prediction in Recife, Brazil.
 
 > Academic project developed at the Federal Rural University of Pernambuco (UFRPE).
 
+[Read the technical article in PDF (27 pages)](docs/articles/artigo_recife_rain_nowcasting.pdf)
+or see the [article documentation](docs/articles/README.md).
+
 ## Overview
 
 Recife is frequently affected by intense rainfall, flooding, and other weather-related urban disruptions.
@@ -110,7 +113,8 @@ notebook results. Old results remain available as clearly identified history in
 Logistic Regression uses StandardScaler in a training-only pipeline, `C=0.01`,
 balanced class weights and `max_iter=3000`. Random Forest uses 300 estimators,
 `balanced_subsample` weights and `n_jobs=-1`. Both use `random_state=42`.
-The fixed, ordered 20-feature list lives in the training module.
+The fixed, ordered 20-feature list lives in `src/features/schema.py`, shared by
+training, inference and hourly-history feature construction.
 
 The primary +1h model retains precision 0.170, recall 0.447 and F1 0.246 on the
 2021 test: 17 true positives, 83 false positives and 21 false negatives.
@@ -145,8 +149,19 @@ recife-rain-nowcasting-ml/
 
 ## Current Status
 
-**Production training is implemented and validated.** Inference and application
-integration remain to be implemented.
+A Portuguese technical article consolidates the methodology, corrected results,
+software development and remaining current-data integration work:
+[read the PDF](docs/articles/artigo_recife_rain_nowcasting.pdf).
+Its [source template](docs/artigo_recife_rain_nowcasting.md) and
+[document builder](docs/build_article.py) preserve reproducible tables without
+changing the validated ML environment or rerunning training.
+
+**Training, inference and reusable feature construction are implemented and
+validated.** The six existing models are loaded once; inference returns scores
+and alerts without fitting. A functional local web prototype supports manual
+seven-hour history, historical examples, six horizon cards and JSON export.
+See [the inference guide](docs/INFERENCE.md), [architecture](docs/architecture.md)
+and [handoff](docs/PROJECT_HANDOFF.md).
 
 ### Roadmap
 
@@ -162,8 +177,21 @@ integration remain to be implemented.
 - [x] Analyze meteorological patterns using clustering
 - [x] Correct temporal label boundaries and revalidate model selection
 - [x] Create reproducible training, serialized artifacts and metadata
-- [ ] Create a prediction API
-- [ ] Develop an application prototype
+- [x] Create a reusable prediction API and automated inference tests
+- [x] Share feature definitions and causal history construction
+- [x] Pin and check the validated runtime environment
+- [x] Develop and test a local application prototype
+
+Run the demonstration with the existing environment/artifacts:
+
+```powershell
+& .\.venv-1\Scripts\python.exe -m app.server --port 8000
+```
+
+Then open [the local application](http://127.0.0.1:8000). See
+[application instructions](app/README.md) and
+[software validation evidence](docs/validation/productionization.md).
+The prototype uses manual/historical input; it has no live station feed.
 
 ## Research Questions
 
@@ -195,7 +223,7 @@ This distinction is important because the research is collaborative.
 
 ## Reproducibility
 
-Environment setup:
+Use **Python 3.14.6**, matching `.python-version`. Environment setup:
 
 ```bash
 python -m venv .venv
@@ -216,17 +244,32 @@ source .venv/bin/activate
 Install dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+python -m src.check_environment
+python -m pip check
 ```
 
-With `data/processed/recife_2018_2021_model_dataset.csv` available locally:
+For notebooks, install `requirements-dev.txt` and check with
+`python -m src.check_environment --development`. See [environment details](docs/INFERENCE.md).
+
+With existing artifacts, run tests without retraining:
 
 ```bash
-python src/models/train_final_models.py
 python -m unittest discover -s tests -v
+python -m src.models.predict features.tmp
 ```
 
-The training command uses the version-controlled
+`features.tmp` is a JSON object with 20 numeric features, or a list for a batch.
+The [inference guide](docs/INFERENCE.md) provides a complete example and the
+seven-hour history API. Integration tests explicitly skip if local files are absent.
+
+Only when artifacts need generating, with the audited dataset available locally:
+
+```bash
+python -m src.models.train_final_models
+```
+
+This explicit training command uses the version-controlled
 [validated configurations](docs/validation/validated_configurations.json) and
 saves `models/model_1h.joblib` through `model_6h.joblib` plus
 `model_metadata.json`. Each joblib contains the fitted estimator and the

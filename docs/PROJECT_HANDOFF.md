@@ -1,5 +1,130 @@
 # Project Handoff — Recife Rain Nowcasting ML
 
+## Authorized Git publication — 2026-10-13 (current Git instructions)
+
+The user explicitly authorized comparing local work with GitHub, creating a
+descriptive commit and pushing `main` to `origin`, including the PDF. After
+`git fetch origin`, no incoming remote commits were found; local checkpoint
+`7279eed` was still one commit ahead of GitHub. The new checkpoint is named:
+`feat: add validated inference, local application and academic article`.
+
+This checkpoint includes the completed inference/application stages, their tests,
+shared source, pinned environment and documentation. The PDF, editable article
+and document checks are organized under `docs/articles/`, with an index README
+and prominent links from the repository README. The document builder writes to
+that same folder. The PDF is moved byte-for-byte; its scientific content and
+model/result fingerprints are preserved. Existing production models and source
+datasets remain ignored by Git, following the established repository policy.
+
+Pre-publication verification passed all 38 tests without skips in the clean
+runtime (13.063 seconds). Runtime pins, `pip check`, compilation and
+`git diff --check` passed. The relocated PDF still has 27 pages and its original
+SHA-256; all nine protected scientific/model files retain their recorded hashes.
+No production model fitting or hyperparameter/threshold selection was rerun.
+
+The earlier descriptions of uncommitted work, no push and pending Git approval
+below are historical snapshots from before this explicit publication request.
+They do not revoke the current authorization. Future commits/pushes still require
+the user's instruction. The current project task remains integration of recent
+A301 observations with explicit freshness/missing-data checks and subsequent
+prospective validation; no ingestion or methodological redesign is added here.
+
+## Academic article documentation — 2026-10-13
+
+A Portuguese technical article now consolidates the available methodology,
+approved temporal correction, historical/current comparison, clustering,
+reproducible training, inference, application development, tests and environment.
+The PDF is `docs/articles/artigo_recife_rain_nowcasting.pdf`; the resolved editable
+text is `docs/articles/artigo_recife_rain_nowcasting.md`. Source template:
+`docs/artigo_recife_rain_nowcasting.md`; document builder: `docs/build_article.py`.
+The builder uses a separate document runtime with ReportLab and pypdf; it does
+not add dependencies to the validated inference environment or import/fit ML code.
+
+The article contains 27 pages, a linked table of contents, architecture diagram,
+prototype screenshot, references and six technical appendices. Tables are derived
+from the frozen configuration and corrected/historical CSVs. The document states
+the user's final goal explicitly: infer +1h to +6h severe rainfall from recent
+INMET observations, while automatic current-data ingestion remains pending.
+Supervised forecasting and descriptive unsupervised clustering are distinguished.
+
+Document checks cover all 20 features, all 30 partition/horizon audit cases,
+configuration/result agreement, unchanged scientific-file SHA-256 fingerprints,
+PDF extraction/bounds and visual review of rendered pages. Evidence and commands:
+`docs/articles/validacao_artigo.json`. The previously recorded 38 software tests
+were documented, not rerun for article writing. No production training, selection,
+scientific-result change, commit or push was performed in this documentation task.
+
+Before academic submission, confirm contributor attribution, original data
+provenance and usage/license notes, and the institution's required article format.
+This article is a documentary version, not proof of operational performance in
+current weather. Git publication was subsequently authorized explicitly, as
+recorded in the current Git instructions above.
+
+## Productionization progress — 2026-10-11 (current status)
+
+The authorized local checkpoint is commit `7279eed` on `main`. It records the
+temporal correction, revalidation and completed final training. No push was made.
+The methodological update below remains authoritative; the original numbered
+handoff is historical, including its unfinished-training instructions.
+
+Completed since that checkpoint:
+
+1. `src/models/predict.py`: loads the six existing artifacts once, checks their
+   metadata/configurations/environment, preserves the 20-feature order, and
+   returns scores and alerts using thresholds 0.99 / 0.06 / 0.78 / 0.79 / 0.85 / 0.67.
+2. `tests/test_predict.py`: all eleven inference tests passed, including direct
+   equivalence with existing artifacts, threshold equality, malformed inputs,
+   CLI success/error exit codes and reproduction of all six frozen 2021 rows.
+3. Shared feature schema and model factory moved into `src/features/schema.py`
+   and `src/models/config.py`. `src/features/build_features.py` builds the latest
+   sample from at least seven consecutive hourly observations, using current/past
+   measurements only. Its five tests include parity with 40+ samples spread over
+   the validated dataset. Dataset loading/temporal selection is now reusable in
+   `src/data/model_dataset.py`; training imports preserve the existing interface.
+
+The suite passed 38 tests after inference/application integration. No production model fitting,
+selection rerun or scientific-result change occurred. Existing training regression
+tests fit synthetic fixtures in temporary directories only.
+
+4. Runtime dependencies are now pinned to the validated environment in
+   `requirements.txt`, with notebook tools in `requirements-dev.txt` and Python
+   3.14.6 in `.python-version`. `src/check_environment.py` checks the installed
+   versions without installing anything. `pip check` found no broken requirements.
+
+The environment checker passed runtime and development pins; three environment
+tests passed. The original notebook environment was not modified. A separate clean
+`.venv-repro` runtime installation passed all 38 tests without skips, the runtime
+version checker and `pip check`. All eleven runtime packages, including resolved
+transitive dependencies, match the original environment. Notebook transitive
+packages are not fully locked. The clean environment remains ignored locally.
+
+5. README, architecture, source/test READMEs and `docs/INFERENCE.md` now document
+   input/output contracts, causal formulas, fixed thresholds, environment setup,
+   reproduction commands and material limitations. `git diff --check` passed.
+
+6. `app/server.py` and `app/static/` implement the functional localhost prototype:
+   editable seven-hour UTC history, labeled synthetic/historical examples, six
+   scores/thresholds/alerts, forecast times and JSON export. Eight application
+   tests passed. Browser QA confirmed synthetic/historical inference, gap rejection,
+   clearing stale results, JSON download and responsive desktop/mobile layouts.
+   The preview servers were stopped after QA. No live data feed or hosting is added.
+
+Final verification passed: six joblibs, metadata, frozen configurations and
+corrected-result CSV have unchanged SHA-256 fingerprints; the dataset matches
+its frozen record. AST comparison proves the model factory, training function
+and three extracted data helpers retain their original behavior. All six 2021
+metric rows reproduce to 1e-12 with exact confusion/sample counts. See
+`docs/validation/productionization.md` and `productionization_checks.json` for
+commands, complete pending-file inventory, checks and issues resolved.
+
+The six requested software stages are complete. The next immediate action is
+user review of the uncommitted changes and authorization for a new local Git
+checkpoint, if desired. No second commit or push is authorized. Remaining project
+tasks are original data provenance/usage metadata, license/contributor decisions,
+and final academic text. Live ingestion, public hosting and mobile packaging are
+future scope, not implemented by the local prototype. Reuse existing models;
+do not retrain/reselect routinely or change validated science without approval.
+
 ## Approved update — 2026-10-11
 
 The original handoff below is preserved as an experimental snapshot. Its final
@@ -44,7 +169,8 @@ original processed result files remain untouched.
 
 The immediate next task after this update is `src/models/predict.py`. Do not
 retrain or select using the historical tables below without the boundary rule.
-No commit or push has been made.
+This methodological update was subsequently committed in the authorized local
+checkpoint `7279eed`; no push was made.
 
 ## 1. Project Status
 

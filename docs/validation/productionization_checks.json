@@ -1,0 +1,278 @@
+{
+  "checked_at_utc": "2026-10-11T04:18:51.299112+00:00",
+  "source_checkpoint": "7279eed73ee8f84c46045cf66f38a5f01ab5d850",
+  "environment": {
+    "python": "3.14.6",
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "3.0.6",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "joblib": "1.6.0",
+      "threadpoolctl": "3.7.0",
+      "python-dateutil": "2.9.0.post0",
+      "six": "1.17.0",
+      "tzdata": "2026.4",
+      "cloudpickle": "3.1.2",
+      "narwhals": "2.26.0"
+    },
+    "development": false
+  },
+  "fresh_runtime_installation": true,
+  "runtime_dependency_check": "pip check: No broken requirements found",
+  "tests": {
+    "original_notebook_environment": {
+      "tests_run": 38,
+      "duration_seconds": 50.502,
+      "status": "passed",
+      "skips": 0
+    },
+    "clean_runtime_environment": {
+      "tests_run": 38,
+      "duration_seconds": 49.28,
+      "status": "passed",
+      "skips": 0
+    }
+  },
+  "protected_files": [
+    {
+      "file": "models/model_1h.joblib",
+      "sha256": "335d69ac585cc515ffc58187b9121878cac4b7f31875b89f0dbe13574329077a",
+      "unchanged": true
+    },
+    {
+      "file": "models/model_2h.joblib",
+      "sha256": "a71fca55a0025e53228e78dd54f4704e91752a72efb558c86d64d48e585fb9e7",
+      "unchanged": true
+    },
+    {
+      "file": "models/model_3h.joblib",
+      "sha256": "45a2211140c4f42b2d237a9868898e7522843826df43fc96f025f9042fb51554",
+      "unchanged": true
+    },
+    {
+      "file": "models/model_4h.joblib",
+      "sha256": "b3490c061b0dd8ada669859de20e1f42ac1a4a33121177ccc0cf689caed1be19",
+      "unchanged": true
+    },
+    {
+      "file": "models/model_5h.joblib",
+      "sha256": "c6842403bf11ff95e61205d563a4f6e8e6a920d1cad88e2a82530d5a89afb8cc",
+      "unchanged": true
+    },
+    {
+      "file": "models/model_6h.joblib",
+      "sha256": "46cb1d3be1a7a5234b51f4a9bb984a38b2f0f20f2a9b4659acefabf9eb380de4",
+      "unchanged": true
+    },
+    {
+      "file": "models/model_metadata.json",
+      "sha256": "fa683b157dba155d7fc825511e15807c727991d1ff7bb6a9660a17879aac6179",
+      "unchanged": true
+    },
+    {
+      "file": "docs/validation/validated_configurations.json",
+      "sha256": "ce6dc78d30e5ad9fc2fbecf33551e275d95047ca55fee88ee19557cc9f21bcee",
+      "unchanged": true
+    },
+    {
+      "file": "docs/validation/corrected_final_evaluation_results.csv",
+      "sha256": "c6137a07d054539eb7a789c0095e0688f50f7992d67023ee2dc14a968ffc3987",
+      "unchanged": true
+    }
+  ],
+  "dataset_sha256": "c5738499de1d2639994a1e9a741b81f1fc74246367f19f864555544236a999d2",
+  "dataset_matches_frozen_record": true,
+  "extracted_functions": [
+    {
+      "file": "src/models/config.py",
+      "function": "build_model",
+      "ast_unchanged": true
+    },
+    {
+      "file": "src/data/model_dataset.py",
+      "function": "load_dataset",
+      "ast_unchanged": true
+    },
+    {
+      "file": "src/data/model_dataset.py",
+      "function": "select_period_data",
+      "ast_unchanged": true
+    },
+    {
+      "file": "src/data/model_dataset.py",
+      "function": "select_training_data",
+      "ast_unchanged": true
+    },
+    {
+      "file": "src/models/train_final_models.py",
+      "function": "train_final_models",
+      "ast_unchanged": true
+    }
+  ],
+  "frozen_2021_metrics_regression": {
+    "horizons": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "metric_absolute_tolerance": 1e-12,
+    "confusion_counts_exact": true,
+    "source_file_unchanged": true
+  },
+  "browser_qa": {
+    "synthetic_forecast": true,
+    "historical_forecast": true,
+    "gap_rejected_and_results_cleared": true,
+    "json_download_validated": true,
+    "desktop_width": 1265,
+    "mobile_width": 412,
+    "page_overflow_after_fix": false,
+    "preview_servers_stopped": true
+  },
+  "production_training_repeated": false,
+  "selection_repeated": false,
+  "git": {
+    "branch": "main",
+    "ahead_of_origin_main": 1,
+    "staged_files": [],
+    "push_performed": false,
+    "pending_files": [
+      {
+        "status": " M",
+        "file": ".gitignore"
+      },
+      {
+        "status": " M",
+        "file": "AGENTS.md"
+      },
+      {
+        "status": " M",
+        "file": "README.md"
+      },
+      {
+        "status": " M",
+        "file": "app/README.md"
+      },
+      {
+        "status": " M",
+        "file": "docs/PROJECT_HANDOFF.md"
+      },
+      {
+        "status": " M",
+        "file": "docs/architecture.md"
+      },
+      {
+        "status": " M",
+        "file": "docs/validation/README.md"
+      },
+      {
+        "status": " M",
+        "file": "requirements.txt"
+      },
+      {
+        "status": " M",
+        "file": "src/README.md"
+      },
+      {
+        "status": " M",
+        "file": "src/models/train_final_models.py"
+      },
+      {
+        "status": " M",
+        "file": "tests/README.md"
+      },
+      {
+        "status": "??",
+        "file": ".python-version"
+      },
+      {
+        "status": "??",
+        "file": "app/server.py"
+      },
+      {
+        "status": "??",
+        "file": "app/static/app.js"
+      },
+      {
+        "status": "??",
+        "file": "app/static/index.html"
+      },
+      {
+        "status": "??",
+        "file": "app/static/styles.css"
+      },
+      {
+        "status": "??",
+        "file": "docs/INFERENCE.md"
+      },
+      {
+        "status": "??",
+        "file": "docs/figures/application-prototype.jpg"
+      },
+      {
+        "status": "??",
+        "file": "docs/validation/productionization.md"
+      },
+      {
+        "status": "??",
+        "file": "docs/validation/productionization_checks.json"
+      },
+      {
+        "status": "??",
+        "file": "requirements-dev.txt"
+      },
+      {
+        "status": "??",
+        "file": "src/check_environment.py"
+      },
+      {
+        "status": "??",
+        "file": "src/data/json_input.py"
+      },
+      {
+        "status": "??",
+        "file": "src/data/model_dataset.py"
+      },
+      {
+        "status": "??",
+        "file": "src/features/build_features.py"
+      },
+      {
+        "status": "??",
+        "file": "src/features/schema.py"
+      },
+      {
+        "status": "??",
+        "file": "src/models/config.py"
+      },
+      {
+        "status": "??",
+        "file": "src/models/predict.py"
+      },
+      {
+        "status": "??",
+        "file": "tests/test_app.py"
+      },
+      {
+        "status": "??",
+        "file": "tests/test_environment.py"
+      },
+      {
+        "status": "??",
+        "file": "tests/test_features.py"
+      },
+      {
+        "status": "??",
+        "file": "tests/test_predict.py"
+      }
+    ],
+    "modified_count": 11,
+    "untracked_count": 21
+  },
+  "compileall_passed": true,
+  "git_diff_check_passed": true
+}

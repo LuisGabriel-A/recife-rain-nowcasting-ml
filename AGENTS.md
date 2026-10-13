@@ -48,7 +48,12 @@ Full corrected results and the historical comparison are in
 `docs/validation/README.md` and `docs/validation/corrected_final_evaluation_results.csv`.
 
 Production training and artifact serialization are implemented and validated.
-Inference/application integration remains the next task. Do not silently revert
+Inference, causal feature construction, automated tests and the local web
+prototype are now implemented. Reuse existing artifacts; do not repeat training
+or selection as part of inference/application work. Current software progress and
+remaining academic/reproducibility tasks are in `docs/PROJECT_HANDOFF.md` and
+`docs/validation/productionization.md`. This status update changes no scientific
+configuration or result. Do not silently revert
 to the historical configurations or rank/select models using the 2021 test.
 
 

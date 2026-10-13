@@ -17,4 +17,21 @@ python src/models/train_final_models.py
 python -m src.evaluation.revalidate_temporal_boundaries
 ```
 
-Inference code is the next productionization task.
+`features/schema.py` defines the ordered feature contract shared by all modules.
+`features/build_features.py` creates the latest causal sample from at least seven
+observed consecutive hours. `data/model_dataset.py` holds CSV validation and
+temporal selection; `models/config.py` supplies the unchanged deterministic
+factory and reads the authoritative frozen configuration JSON.
+
+`models/predict.py` loads the six existing models once, checks metadata/environment,
+and returns scores/alerts at fixed thresholds. It never calls fit.
+`check_environment.py` verifies the Python/package pins without installing anything.
+
+```powershell
+python -m src.check_environment
+python -m src.models.predict features.tmp
+python -m unittest discover -s tests -v
+```
+
+See [the inference guide](../docs/INFERENCE.md). Training and reselection commands
+above are explicit reproduction tools; routine inference does not need them.

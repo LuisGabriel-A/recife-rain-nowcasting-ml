@@ -1,5 +1,10 @@
 # Temporal label-boundary correction — 2026-10-11
 
+Software follow-up: inference, shared causal features, pinned dependencies and
+the local application are now implemented. See [productionization.md](productionization.md)
+for current software checks. This report retains the scientific correction and
+historical record from checkpoint `7279eed`; its results/configurations are unchanged.
+
 The user explicitly authorized this correction after an audit found that the
 original notebooks split samples by the observation timestamp `t` only. The last
 `h` eligible observations of each year had `target_hh` labels derived from the

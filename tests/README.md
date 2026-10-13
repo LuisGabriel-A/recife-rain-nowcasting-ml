@@ -2,7 +2,7 @@
 
 Automated tests for reusable preprocessing, feature engineering, training, and prediction code.
 
-Run the training and temporal-boundary regression checks with standard-library
+Run the full suite with standard-library
 unittest (no additional dependency):
 
 ```powershell
@@ -14,3 +14,18 @@ exclusion of reserved-period labels, rejection of malformed/incomplete inputs,
 pre-2021 selection, training-only scalers, metadata and actual six-model joblib
 serialization. Synthetic artifacts are created and cleaned inside temporary
 directories under `tests/`, without touching the production models.
+
+`test_predict.py` checks threshold equality, batch order, input validation and
+artifact consistency, comparing read-only predictions with all six saved models.
+`test_features.py` checks causal lags/sums/changes, UTC/leap-year cycles, invalid
+history and 40+ feature-parity samples across the dataset. `test_environment.py`
+checks valid versions and explicit mismatch errors.
+
+`test_app.py` uses actual localhost HTTP requests to verify status/error contracts,
+plus read-only integration of raw historical observations and existing models.
+The inference suite also exercises the CLI and reproduces the six frozen 2021
+metric rows to tolerance 1e-12, without training or rewriting result files.
+
+Integration tests explicitly skip if ignored local models/data are absent. Supply
+these files and verify no skips to validate complete integration. No test overwrites
+the production artifacts.

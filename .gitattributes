@@ -1,0 +1,2 @@
+# Preserve PDF bytes and treat academic documents as binary artifacts.
+*.pdf binary

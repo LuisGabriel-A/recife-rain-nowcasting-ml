@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Protótipo acadêmico de previsão de chuva severa em Recife, com seis horizontes horários.">
+  <title>Recife Rain · Laboratório de previsão</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Recife Rain, início"><span class="brand-mark" aria-hidden="true">≋</span> RECIFE RAIN</a>
+    <span class="project-tag">UFRPE · PROTÓTIPO ACADÊMICO</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">OBSERVAR. APRENDER. ANTECIPAR.</p>
+        <h1>As próximas horas,<br><em>sob outro olhar.</em></h1>
+        <p class="intro-text">Explore como observações meteorológicas de Recife se traduzem em previsões de chuva severa, de +1h a +6h.</p>
+      </div>
+      <aside class="station"><span class="station-dot"></span><strong>A301 · Recife, PE</strong><br><span>Uma estação. Seis horizontes.</span><br><span id="connection">Carregando modelos…</span></aside>
+    </section>
+
+    <div class="workspace">
+      <section class="panel input-panel" aria-labelledby="input-title">
+        <div class="section-top"><span class="step">01</span><h2 id="input-title">Histórico observado</h2><span class="small-tag">7 HORAS · UTC</span></div>
+        <p class="muted">Informe as horas de t−6h até t. A última linha define o instante da previsão. Todas as medidas são obrigatórias.</p>
+        <label for="example">Escolha um cenário</label>
+        <select id="example"><option value="synthetic">Exemplo sintético · editável</option></select>
+        <p id="example-note" class="source-note">Valores sintéticos para demonstrar a interface.</p>
+        <form id="forecast-form">
+          <div class="table-scroll"><table>
+            <caption class="sr-only">Sete observações horárias editáveis</caption>
+            <thead><tr><th>Data / hora UTC</th><th>Chuva<br><span>mm/h</span></th><th>Temp.<br><span>°C</span></th><th>Umid.<br><span>%</span></th><th>Pressão<br><span>mb</span></th></tr></thead>
+            <tbody id="history"></tbody>
+          </table></div>
+          <button id="predict-button" type="submit">Consultar os seis horizontes <span aria-hidden="true">↗</span></button>
+          <p id="error" class="error" role="alert" hidden></p>
+        </form>
+        <details class="technical"><summary>Entrada e saída JSON</summary><pre id="request-json">Consulte uma previsão para ver os dados enviados.</pre><pre id="response-json"></pre><button id="download" type="button" disabled>Baixar resultado JSON</button></details>
+      </section>
+
+      <section class="output-panel" aria-labelledby="output-title">
+        <div class="section-top"><span class="step">02</span><h2 id="output-title">Horizontes de previsão</h2></div>
+        <p id="forecast-context" class="muted" aria-live="polite">Pronto para consultar. Os modelos utilizam apenas o histórico informado.</p>
+        <div id="predictions" class="prediction-grid" aria-live="polite"></div>
+        <p class="score-note"><strong>Como ler:</strong> o score é comparado ao threshold de cada modelo. Ele não representa uma probabilidade meteorológica calibrada. A previsão se refere à hora indicada, não ao acumulado do intervalo.</p>
+      </section>
+    </div>
+
+    <section class="method-strip" aria-label="Contexto científico">
+      <div><span class="eyebrow">DEFINIÇÃO DO PROJETO</span><strong>≥ 10 mm/h</strong><p>Chuva severa na hora prevista. Critério operacional, sem caráter oficial do INMET.</p></div>
+      <div><span class="eyebrow">DADOS EFETIVOS</span><strong>2018–2021</strong><p>A301, até 12/11/2021 às 06 UTC. Treino: 2018–2020; avaliação: 2021.</p></div>
+      <div><span class="eyebrow">USO ACADÊMICO</span><strong>Uma camada complementar</strong><p>Há falsos alertas e eventos não detectados. Consulte os avisos oficiais; este protótipo não oferece dados em tempo real.</p></div>
+    </section>
+  </main>
+  <footer>Recife Rain Nowcasting ML <span>Ciência de dados · Observações horárias · Inferência local</span></footer>
+</body>
+</html>

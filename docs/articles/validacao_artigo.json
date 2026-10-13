@@ -1,0 +1,105 @@
+{
+  "document_date": "2026-10-13",
+  "pages": 27,
+  "words": 9102,
+  "pdf_sha256": "bd8eb32716c5dd3dda8fe84680c6c55597ce706fa38cb34cc0b84c221d91d745",
+  "all_20_features_present": true,
+  "tables_derived_from_frozen_csvs": true,
+  "all_30_boundary_cases_checked": true,
+  "protected_scientific_files_unchanged": {
+    "models\\model_1h.joblib": "335d69ac585cc515ffc58187b9121878cac4b7f31875b89f0dbe13574329077a",
+    "models\\model_2h.joblib": "a71fca55a0025e53228e78dd54f4704e91752a72efb558c86d64d48e585fb9e7",
+    "models\\model_3h.joblib": "45a2211140c4f42b2d237a9868898e7522843826df43fc96f025f9042fb51554",
+    "models\\model_4h.joblib": "b3490c061b0dd8ada669859de20e1f42ac1a4a33121177ccc0cf689caed1be19",
+    "models\\model_5h.joblib": "c6842403bf11ff95e61205d563a4f6e8e6a920d1cad88e2a82530d5a89afb8cc",
+    "models\\model_6h.joblib": "46cb1d3be1a7a5234b51f4a9bb984a38b2f0f20f2a9b4659acefabf9eb380de4",
+    "models\\model_metadata.json": "fa683b157dba155d7fc825511e15807c727991d1ff7bb6a9660a17879aac6179",
+    "docs\\validation\\validated_configurations.json": "ce6dc78d30e5ad9fc2fbecf33551e275d95047ca55fee88ee19557cc9f21bcee",
+    "docs\\validation\\corrected_final_evaluation_results.csv": "c6137a07d054539eb7a789c0095e0688f50f7992d67023ee2dc14a968ffc3987"
+  },
+  "recorded_software_tests_not_rerun": {
+    "original_notebook_environment": {
+      "tests_run": 38,
+      "duration_seconds": 50.502,
+      "status": "passed",
+      "skips": 0
+    },
+    "clean_runtime_environment": {
+      "tests_run": 38,
+      "duration_seconds": 49.28,
+      "status": "passed",
+      "skips": 0
+    }
+  },
+  "model_training_or_selection_run": false,
+  "visual_review": "passed",
+  "methodology_changed": false,
+  "visually_reviewed_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "rendered_pages": 27,
+  "renderer": "PDFium; Poppler also exercised with harmless unused-font warnings",
+  "pdf_bookmarks": 21,
+  "text_boundary_errors": [],
+  "known_document_limits": [
+    "Formal contributor attribution pending",
+    "Original data provenance and license metadata pending",
+    "Institutional submission format not specified",
+    "No current-weather feed or prospective evaluation implemented"
+  ],
+  "commands_executed": [
+    "Get-Content and rg: read project documentation and relevant source",
+    "git status --short; git log -1 --oneline",
+    "Bundled Node: mark_artifact_operation_started.mjs --operation-kind create --expected-output-count 1 --output-format pdf",
+    "Bundled Python: docs/build_article.py (ReportLab generation and source/CSV assertions)",
+    "pdftoppm -r 95 -png: PDF rendering",
+    "Bundled Python: PDFium render, pdfplumber extraction/bounds, pypdf structure, SHA-256 integrity and AST syntax checks",
+    "git diff --check"
+  ],
+  "files_created": [
+    "docs/artigo_recife_rain_nowcasting.md",
+    "docs/build_article.py",
+    "output/pdf/artigo_recife_rain_nowcasting.pdf",
+    "output/pdf/artigo_recife_rain_nowcasting.md",
+    "output/pdf/validacao_artigo.json"
+  ],
+  "files_modified": [
+    "README.md",
+    "docs/PROJECT_HANDOFF.md"
+  ],
+  "commit_performed": false,
+  "push_performed": false,
+  "relocation": {
+    "date": "2026-10-13",
+    "original_folder": "output/pdf",
+    "current_folder": "docs/articles",
+    "pdf_sha256_preserved": true,
+    "original_generation_record_preserved": true
+  }
+}
